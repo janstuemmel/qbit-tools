@@ -14,5 +14,4 @@ jobs:
       - run: go build
       - run: |
           docker build . --tag ghcr.io/janstuemmel/qbit-tools:latest
-          docker run ghcr.io/janstuemmel/qbit-tools:latest
           docker push ghcr.io/janstuemmel/qbit-tools:latest
