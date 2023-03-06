@@ -3,7 +3,7 @@
 ## Install
 
 ```sh
-go build
+CGO_ENABLED=0 go build
 sudo mv qbit-tools /usr/local/bin/qbit-tools
 sudo chmod +x /usr/local/bin/qbit-tools
 ```
