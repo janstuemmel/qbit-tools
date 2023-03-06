@@ -14,7 +14,7 @@ jobs:
           registry: ghcr.io
           username: ${{ github.actor }}
           password: ${{ secrets.PAT }}
-      - run: go build
+      - run: CGO_ENABLED=0 go build
       - run: |
           docker build . --tag ghcr.io/janstuemmel/qbit-tools:latest
           docker push ghcr.io/janstuemmel/qbit-tools:latest
