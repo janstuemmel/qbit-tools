@@ -15,6 +15,7 @@ type Torrent struct {
 	Category string `json:"category"`
 	Hash     string `json:"hash"`
 	SavePath string `json:"save_path"`
+	Tags     string `json:"tags"`
 }
 
 type qbit struct {
@@ -73,6 +74,23 @@ func (q *qbit) PostTorrentsAddTags(hashes []string, tags string) error {
 	_, err := q.Cli.R().
 		SetFormData(payload).
 		Post("api/v2/torrents/addTags")
+
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (q *qbit) PostTorrentsRemoveTags(hashes []string, tags string) error {
+	payload := map[string]string{
+		"hashes": strings.Join(hashes, "|"),
+		"tags":   tags,
+	}
+
+	_, err := q.Cli.R().
+		SetFormData(payload).
+		Post("api/v2/torrents/removeTags")
 
 	if err != nil {
 		return err

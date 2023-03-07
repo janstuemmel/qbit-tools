@@ -8,6 +8,8 @@ import (
 	"os"
 	"path"
 	"qbit-tools/qbit"
+
+	"github.com/schollz/progressbar/v3"
 )
 
 type BackupCmd struct {
@@ -33,6 +35,9 @@ func (c *BackupCmd) Run() error {
 
 	torrents, err := qbit.GetTorrentsInfo()
 
+	bar := progressbar.Default(int64(len(torrents)))
+	bar.Describe("Download torrents")
+
 	for _, torrent := range torrents {
 
 		res, err := qbit.Cli.R().
@@ -52,7 +57,14 @@ func (c *BackupCmd) Run() error {
 			fmt.Println(err)
 			continue
 		}
+
+		bar.Add(1)
 	}
+
+	bar.Finish()
+	bar.Clear()
+
+	fmt.Printf("Backed up %d torrents\n", len(torrents))
 
 	zipWriter.Close()
 	return nil

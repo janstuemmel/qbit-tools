@@ -2,6 +2,8 @@ package trackerstatus
 
 import (
 	"qbit-tools/qbit"
+	"qbit-tools/util"
+	"strings"
 )
 
 type TrackerstatusCmd struct{}
@@ -19,15 +21,33 @@ func (c *TrackerstatusCmd) Run() error {
 		return err
 	}
 
-	var hashes []string
+	var hashesErr []string
+	var hashesOk []string
+	tblOk := util.NewTable("Torrents with tracker working again", "Save path")
+	tblErr := util.NewTable("Torrents with errored tracker", "Save path")
 
 	for _, torrent := range torrents {
 		if torrent.Tracker == "" {
-			hashes = append(hashes, torrent.Hash)
+			tblErr.AddRow(torrent.Name, torrent.SavePath)
+			hashesErr = append(hashesErr, torrent.Hash)
+		}
+
+		if torrent.Tracker != "" && strings.Contains(torrent.Tags, "tracker-error") {
+			tblOk.AddRow(torrent.Name, torrent.SavePath)
+			hashesOk = append(hashesOk, torrent.Hash)
 		}
 	}
 
-	err = qbit.PostTorrentsAddTags(hashes, "tracker-error")
+	if len(hashesErr) > 0 {
+		tblErr.Print()
+	}
+
+	if len(hashesOk) > 0 {
+		tblOk.Print()
+	}
+
+	err = qbit.PostTorrentsAddTags(hashesErr, "tracker-error")
+	err = qbit.PostTorrentsRemoveTags(hashesOk, "tracker-error")
 
 	if err != nil {
 		return err
