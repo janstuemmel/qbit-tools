@@ -1,7 +1,8 @@
 package main
 
 import (
-	export "qbit-tools/backup"
+	backup "qbit-tools/backup"
+	trackerrename "qbit-tools/tracker-rename"
 	trackerstatus "qbit-tools/tracker-status"
 
 	"github.com/alecthomas/kong"
@@ -9,7 +10,8 @@ import (
 
 var cli struct {
 	Trackerstatus trackerstatus.TrackerstatusCmd `cmd:"" name:"tracker-status" help:"Label tracker errors"`
-	Export        export.BackupCmd               `cmd:"" name:"backup" help:"Backup torrents as zip"`
+	Backup        backup.BackupCmd               `cmd:"" name:"backup" help:"Backup torrents as zip"`
+	Trackerrename trackerrename.TrackerrenameCmd `cmd:"" name:"tracker-rename" help:"Batch rename tracker urls"`
 }
 
 func main() {
